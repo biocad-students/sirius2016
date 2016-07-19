@@ -149,7 +149,7 @@ if __name__ == '__main__':
     arr = []
     array = []
     while strin:
-        if not(num % 1100) and (num != 0):
+        if not(num % 50000) and (num != 0):
             arr.append([array, nu, out])
             array = []
             nu +=1
