@@ -218,7 +218,7 @@ def main():
     path = args.file_in
     dirs = os.listdir(path)
 
-    for file in dirs:
+    for file in filter(lambda x: x.contain("bad"), dirs):
         file_in = open(os.path.join(path, file), 'r')
         file_out_b = open(os.path.join(args.dir_out_b, file), "at")
         file_out_g = open(os.path.join(args.dir_out_g, file), "at")
