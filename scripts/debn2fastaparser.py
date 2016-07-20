@@ -1,18 +1,17 @@
-import sklearn
-import numpy
-import Bio
-from sklearn.cluster import DBSCAN
-from sklearn import metrics
-import numpy as np
-from sklearn.cluster import dbscan
-from Bio.Blast import NCBIWWW, NCBIXML
 from Bio.Seq import Seq
-from Bio import AlignIO, SeqIO
-from Bio.Alphabet import generic_rna
 from Bio.Alphabet import generic_dna
+import argparse
 
-a = open("good.VH.csv", "r") #сюда вводить имя файла Макса
-out = open("out_file.fasta",'w') #а сюда имя фаста файла
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--file_in', help='input file') #имя файла Макса
+    parser.add_argument('--file_out', help='output file') #имя .fasta файла
+
+    return parser.parse_args()
+
+a = open(file_in, "r")
+out = open(file_out,'w')
 b =  a.readlines()
 for i in range(len(b)):
     b[i] = b[i].rstrip()
