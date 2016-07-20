@@ -72,7 +72,7 @@ def parse_args():
 	parser.add_argument('--in_file', help='input file [fasta]')
 	parser.add_argument('--out_dir', help='output directory')
 	parser.add_argument('--path_germline', help='directory of germlines')
-	parser.add_argument('--is_heavy', type=bool, help='1 if file contains HC, 0 if it contains LC')
+	parser.add_argument('--is_heavy', type=int, help='1 if file contains HC, 0 if it contains LC')
 	return parser.parse_args()
 
 
@@ -82,7 +82,7 @@ def main():
 	path_file = tmp.in_file
 	path_out = tmp.out_dir
 	path_germline =  tmp.path_germline
-	is_vh = tmp.is_heavy
+	is_vh = bool(tmp.is_heavy)
 
 
 
