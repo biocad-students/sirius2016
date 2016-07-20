@@ -1,7 +1,6 @@
 from Bio.Seq import reverse_complement
 import numpy as np
 from multiprocessing import Pool
-from sys import argv
 import os.path
 import argparse
 
@@ -69,21 +68,18 @@ def sga(s1, s2, s3, s4):
     ans4 = s4[:y] + "-" * x + ans4
     return ans1, ans2, ans3, ans4 #
 
-#функция на которую передаеться массив в котором массив с массивами последовательностей, номер, выходной файл
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--in1', help='first input file')
-    parser.add_argument('--in2', help='second input file')
-    parser.add_argument('--out_dir', help='output directory')
+    parser.add_argument('--dir', help='directory')
+    parser.add_argument('--num', help='output file')
     return parser.parse_args()
 
 
-
-def pairarr(arr):
-    print('File_' + str(arr[1]) + "_open")
-    outfile = open(os.path.join(arr[2], "SmallPair_" + str(arr[1]) + ".fasta"), "at")
-    for mas in arr[0]:
+#функция на которую передаеться массив в котором массив с массивами последовательностей, номер, выходной файл
+def pairarr(arr, direct, nfile):
+    outfile = open(os.path.join(direct, "SmallPair_" + str(nfile) + ".fasta"), "w")
+    for mas in arr:
         seq1 = mas[2]
         seq2 = mas[3]
         desc1 = mas[6]
@@ -122,49 +118,27 @@ def pairarr(arr):
         del seq
         del desc
     outfile.close()
-    print('File_' + str(arr[1]) + "_Close")
-
-#основная функция которая составляет массивы для функции и параллелит функции
-if __name__ == '__main__':
-    # print("infile No1:")
-    # in1 = input()
-    # print("infile No2:")
-    # in2 = input()
-    # print("OutFolder:")
-    # out = input()
 
 
-    tmp = parse_args()
-    in1 = tmp.in1
-    in2 = tmp.in2
-    out = tmp.out_dir
-
-
-    infile1 = open(in1, "r")
-    infile2 = open(in2, "r")
-    strin = 1
-    nu = 0
-    num = 0
+tmp = parse_args()
+out = tmp.dir
+number = tmp.num
+infile1 = open(os.path.join(out,"R1","R1_" + str(number) + ".fasta"), "r")
+infile2 = open(os.path.join(out,"R2","R2_" + str(number) + ".fasta"), "r")
+strin = 1
+nu = 0
+num = 0
+a = []
+array = []
+while strin:
+    del a
     a = []
-    arr = []
-    array = []
-    while strin:
-        if not(num % 50000) and (num != 0):
-            arr.append([array, nu, out])
-            array = []
-            nu +=1
-        del a
-        a = []
-        for i in range(4):
-            strin = infile1.readline()
-            a.append(strin)
-            strin = infile2.readline()
-            a.append(strin)
-        array.append(a)
-        num += 1
-    infile1.close()
-    infile2.close()
-    arr.append([array, nu, out])
-    p1 = Pool()
-    p1.map(pairarr, arr)
-    p1.close()
+    for i in range(4):
+        strin = infile1.readline()
+        a.append(strin)
+        strin = infile2.readline()
+        a.append(strin)
+    array.append(a)
+infile1.close()
+infile2.close()
+pairarr(array, out, number)
