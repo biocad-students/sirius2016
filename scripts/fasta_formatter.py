@@ -26,8 +26,10 @@ def main():
                 if int(rflag):
                     seq = seq[::-1].replace('A', 't').replace('T', 'a').replace('C', 'g').replace('G', 'c').upper()
                 seq = seq[int(shift):]
+                fr1_start = int(fr1i.split()[0]) * 3 if fr1i != '.' else 0
+                fr4_end   = int(fr4i.split()[1]) * 3 if fr4i != '.' else len(seq)
                 fd.write(">%s\n" % seqid)
-                fd.write("%s\n" % seq)
+                fd.write("%s\n" % seq[fr1_start:fr4_end])
 
 if __name__ == "__main__":
     main()
