@@ -76,9 +76,9 @@ def parse_args():
     return parser.parse_args()
 
 
-#функция на которую передаеться массив в котором массив с массивами последовательностей, номер, выходной файл
+#функция на которую передаеться массив с массивами последовательностей, номер, выходной файл
 def pairarr(arr, direct, nfile):
-    outfile = open(os.path.join(direct, "SmallPair_" + str(nfile) + ".fasta"), "w")
+    outfile = open(os.path.join(direct, "SmallPair_" + str(nfile) + ".fastq"), "w")
     for mas in arr:
         seq1 = mas[2]
         seq2 = mas[3]
@@ -123,8 +123,8 @@ def pairarr(arr, direct, nfile):
 tmp = parse_args()
 out = tmp.dir
 number = tmp.num
-infile1 = open(os.path.join(out,"R1","R1_" + str(number) + ".fasta"), "r")
-infile2 = open(os.path.join(out,"R2","R2_" + str(number) + ".fasta"), "r")
+infile1 = open(os.path.join(out,"R1","R1_" + str(number) + ".fastq"), "r")
+infile2 = open(os.path.join(out,"R2","R2_" + str(number) + ".fastq"), "r")
 strin = 1
 nu = 0
 num = 0
