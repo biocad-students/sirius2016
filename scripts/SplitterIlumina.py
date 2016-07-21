@@ -8,11 +8,11 @@ def parse_args():
     parser.add_argument('--in1', help='input file')
     parser.add_argument('--in2', help='input file')
     parser.add_argument('--out_dir', help='output directory')
-    parser.add_argument('--n', help='output directory')
+    parser.add_argument('--n', type=int, help='seq in one file')
     return parser.parse_args()
 
-n = tmp.n
 tmp = parse_args()
+n = tmp.n
 in1 = tmp.in1
 in2 = tmp.in2
 out_directory = tmp.out_dir
