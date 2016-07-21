@@ -260,13 +260,15 @@ def main():
                     fl = '0' #'0' - еще не найден FR4, что-то другое - имя найденного FR4
 
                     for fr in file_in_fr: #пробегаем по FR4
-                        scor = sga(cur_aa, fr.seq)[0] #выравнивание FR4 на последовательность
+                        tmp = sga(cur_aa, fr.seq) #выравнивание FR4 на последовательность
+                        scor = tmp[0]
                         if scor > 0.75: #выравнивание хорошее
                             for_wr = str_.split(',') #нужно заменить поля str_: вставить имя FR4, заменить последовательность на новую и убрать флаг на сдвиг и переворот последовательности
                             for_wr[1] = str(cur_seq)
                             for_wr[11] = '0'
                             for_wr[10] = '0'
                             for_wr[5] = fr.name
+                            for_wr[9] = str(tmp[1]) + " " + str(tmp[2])
                             file_out_g.write(','.join(for_wr) + "\n")
                             file_out_g.flush()
                             fl = fr.name
@@ -278,13 +280,16 @@ def main():
                         cur_aa = tr(cur_seq) #перевод в аминокислоты
 
                         for fr in file_in_fr: #пробегаем по FR4
-                            scor = sga(cur_aa, fr.seq)[0]  #выравнивание FR4 на последовательность
+                            
+                            tmp = sga(cur_aa, fr.seq)  #выравнивание FR4 на последовательность
+                            scor = tmp[0]
                             if scor > 0.75: #выравнивание хорошее
                                 for_wr = str_.split(',')  #нужно заменить поля str_: вставить имя FR4, заменить последовательность на новую и убрать флаг на сдвиг и переворот последовательности
                                 for_wr[1] = str(cur_seq)
                                 for_wr[11] = '0'
                                 for_wr[10] = '0'
                                 for_wr[5] = fr.name
+                                for_wr[9] = str(tmp[1]) + " " + str(tmp[2])
                                 file_out_g.write(','.join(for_wr) + "\n")
                                 file_out_g.flush()
                                 fl = fr.name
@@ -306,13 +311,15 @@ def main():
                     fl = '0' #'0' - еще не найден FR4, что-то другое - имя найденного FR1
 
                     for fr in file_in_fr: #пробегаем по FR1
-                        scor = sga(cur_aa, fr.seq)[0] #выравнивание FR1 на последовательность
+                        tmp = sga(cur_aa, fr.seq) #выравнивание FR1 на последовательность
+                        scor = tmp[0]
                         if scor > 0.75: #выравнивание хорошее
                             for_wr = str_.split(',') #нужно заменить поля str_: вставить имя FR4, заменить последовательность на новую и убрать флаг на сдвиг и переворот последовательности
                             for_wr[1] = str(cur_seq)
                             for_wr[11] = '0'
                             for_wr[10] = '0'
                             for_wr[2] = fr.name
+                            for_wr[6] = str(tmp[1]) + " " + str(tmp[2])
                             file_out_g.write(','.join(for_wr) + "\n")
                             file_out_g.flush()
                             fl = fr.name
@@ -324,13 +331,15 @@ def main():
                         cur_aa = tr(cur_seq) #перевод в аминокислоты
 
                         for fr in file_in_fr: #пробегаем по FR1
-                            scor = sga(cur_aa, fr.seq)[0] #выравнивание FR1 на последовательность
+                            tmp = sga(cur_aa, fr.seq) #выравнивание FR1 на последовательность
+                            scor = tmp[0]
                             if scor > 0.75: #выравнивание хорошее
                                 for_wr = str_.split(',') #нужно заменить поля str_: вставить имя FR4, заменить последовательность на новую и убрать флаг на сдвиг и переворот последовательности
                                 for_wr[1] = str(cur_seq)
                                 for_wr[11] = '0'
                                 for_wr[10] = '0'
                                 for_wr[2] = fr.name
+                                for_wr[6] = str(tmp[1]) + " " + str(tmp[2])
                                 file_out_g.write(','.join(for_wr) + "\n")
                                 file_out_g.flush()
                                 fl = fr.name
