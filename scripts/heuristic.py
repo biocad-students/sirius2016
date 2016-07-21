@@ -1,11 +1,13 @@
 from Bio import SeqIO
 import numpy as np
-import os, sys
+import os
+import sys
 from Bio.Seq import Seq
 import argparse
 
 GAP_PENALTY = 5
 COINCIDENCE_SCORE = 4
+
 
 # вспомогательная функция для sga
 def similarity(x, y):
@@ -20,11 +22,13 @@ def similarity(x, y):
         score += (x[i] != y[i])
     return [(1 - (score / (finish - start + 1))), start, finish]
 
+
 # вспомогательная функция для sga
 def f(x, y):
     if x == y:
         return COINCIDENCE_SCORE
     return -COINCIDENCE_SCORE
+
 
 # вполуглобальное выравнивание
 def sga(s1, s2):
@@ -45,7 +49,8 @@ def sga(s1, s2):
     ans1 = s1[x:] + "-" * (m - y)
     ans2 = s2[y:] + "-" * (n - x)
     while (x * y != 0):
-        arr = [d[x][y - 1] - GAP_PENALTY, d[x - 1][y] - GAP_PENALTY, d[x][y] + f(s1[x - 1], s2[y - 1])]
+        arr = [d[x][y - 1] - GAP_PENALTY, d[x - 1][y] - GAP_PENALTY,
+               d[x][y] + f(s1[x - 1], s2[y - 1])]
         scr = arr.index(max(arr))
         if (scr == 2):
             ans1 = s1[x - 1] + ans1
@@ -65,23 +70,24 @@ def sga(s1, s2):
 
 # словарь, для перевода нуклеотидов в аминокислоты
 map = {
-    "TC-":"S",
-    "CT-":"L",
-    "CC-":"P",
-    "CG-":"R",
-    "AC-":"T",
-    "GT-":"V",
-    "GC-":"A",
-    "GG-":"G",
-    "TT-":"X",
-    "TA-":"X",
-    "TG-":"X",
-    "CA-":"X",
-    "AT-":"X",
-    "AA-":"X",
-    "AG-":"X",
-    "GA-":"X",
+    "TC-": "S",
+    "CT-": "L",
+    "CC-": "P",
+    "CG-": "R",
+    "AC-": "T",
+    "GT-": "V",
+    "GC-": "A",
+    "GG-": "G",
+    "TT-": "X",
+    "TA-": "X",
+    "TG-": "X",
+    "CA-": "X",
+    "AT-": "X",
+    "AA-": "X",
+    "AG-": "X",
+    "GA-": "X",
 }
+
 
 # перевод нуклеотидов в аминокислоты
 def tr(cur_seq):
@@ -103,12 +109,15 @@ def tr(cur_seq):
             ans += 'X'
     return ans
 
+
 # работа с консолью
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--file_in', help='first input file')  # файл с bad
-    parser.add_argument('--dir_out_b', help='first (bad) output directory')  # папка для записи bad
-    parser.add_argument('--dir_out_g', help='second (good) output directory')  # папка для записи good
+    parser.add_argument('--dir_out_b',
+                        help='first (bad) output directory')  # папка bad
+    parser.add_argument('--dir_out_g',
+                        help='second (good) output directory')  # папка good
     parser.add_argument('--file_in_fr', help='frame with VXes')  # папка с FR
 
     return parser.parse_args()
@@ -116,8 +125,8 @@ def parse_args():
 # словарь для хранения FR
 map_fr = {}
 
-# создание словаря для хранения FR
 
+# создание словаря для хранения FR
 def get_map(arg):
     for i in ["VH_FR", "VL_FR", "VK_FR"]:
         for j in range(1, 5):
@@ -126,17 +135,19 @@ def get_map(arg):
     path_fr = arg
     dirs_fr = os.listdir(path_fr)
 
-    for file in dirs_fr: #бежим по папке со всеми FR(VH, VK, VL)
+    for file in dirs_fr:  # бежим по папке со всеми FR(VH, VK, VL)
         file_in_fr = os.path.join(path_fr, file)
 
         path_fr_loc = file_in_fr
         dirs_fr_loc = os.listdir(path_fr_loc)
 
-        for file_loc in dirs_fr_loc: # бежим по папке (VH, VK, VL) там 4 FR
-            file_parse = SeqIO.parse(os.path.join(path_fr_loc, file_loc), "fasta")
+        for file_loc in dirs_fr_loc:  # бежим по папке (VH, VK, VL) там 4 FR
+            file_parse = SeqIO.parse(os.path.join(path_fr_loc, file_loc),
+                                     "fasta")
             st = file + '_' + file_loc
             for i in file_parse:
                 map_fr[st].append(i)
+
 
 def main():
     args = parse_args()
@@ -158,8 +169,8 @@ def main():
             if int(cur[11]) == 1:  # нужно развернуть
                 seq = str(Seq(seq).reverse_complement())
 
-            for q in range(6, 10):  # старт и стоп перевести из аминокислотных в нуклеотидные
-                if cur[q] != '.':
+            for q in range(6, 10):  # старт и стоп перевести
+                if cur[q] != '.':  # из аминокислотных в нуклеотидные
                     cur[q] = cur[q].split()
                     cur[q][0] = int(cur[q][0])
                     cur[q][1] = int(cur[q][1])
@@ -176,23 +187,23 @@ def main():
 
             if count_fr == 3:
                 if cur[5] == '.':  # если нет FR4
-                    stop_ = int(cur[8][1]) + 1 - int(cur[10])  # где заканчивается FR3
-                    cur_seq = seq[:stop_] + '-' + seq[
-                                                  stop_:]  # последовательность для перевода в аминокислоты с одним GAP
+                    stop_ = int(cur[8][1]) + 1 - int(cur[10])  # конец FR3
+                    cur_seq = seq[:stop_] + '-' + seq[stop_:]
 
                     cur_aa = tr(cur_seq)  # перевод в аминокислоты
 
                     name = 'V' + cur[2][1]  # определение VH/VL/VH
 
-                    file_in_fr = map_fr[name + "_FR4.fasta"]  # все последовательности FR4
+                    file_in_fr = \
+                        map_fr[name + "_FR4.fasta"]  # последовательности FR4
 
-                    fl = '0'  # '0' - еще не найден FR4, что-то другое - имя найденного FR4
+                    fl = '0'  # '0' - нет FR4, иначе - имя найденного FR4
 
                     for fr in file_in_fr:  # пробегаем по FR4
-                        tmp = sga(cur_aa, fr.seq)  # выравнивание FR4 на последовательность
+                        tmp = sga(cur_aa, fr.seq)  # выравнивание
                         scor = tmp[0]
                         if scor > 0.75:  # выравнивание хорошее
-                            for_wr = str_.split(',')  # нужно заменить поля str_: вставить имя FR4, заменить последовательность на новую и убрать флаг на сдвиг и переворот последовательности
+                            for_wr = str_.split(',')
                             for_wr[1] = str(cur_seq)
                             for_wr[11] = '0'
                             for_wr[10] = '0'
@@ -204,17 +215,15 @@ def main():
                             break
 
                     if fl == '0':  # не нашли FR4 с одним GAP
-                        cur_seq = seq[0:stop_] + '--' + seq[stop_:]  # последовательность для перевода в аминокислоты с двумя GAP
+                        cur_seq = seq[0:stop_] + '--' + seq[stop_:]
 
                         cur_aa = tr(cur_seq)  # перевод в аминокислоты
 
                         for fr in file_in_fr:  # пробегаем по FR4
-
-                            tmp = sga(cur_aa, fr.seq)  # выравнивание FR4 на последовательность
+                            tmp = sga(cur_aa, fr.seq)  # выравнивание
                             scor = tmp[0]
                             if scor > 0.75:  # выравнивание хорошее
-                                for_wr = str_.split(
-                                    ',')  # нужно заменить поля str_: вставить имя FR4, заменить последовательность на новую и убрать флаг на сдвиг и переворот последовательности
+                                for_wr = str_.split(',')
                                 for_wr[1] = str(cur_seq)
                                 for_wr[11] = '0'
                                 for_wr[10] = '0'
@@ -229,24 +238,22 @@ def main():
                             file_out_b.write(str_)
                             file_out_b.flush()
                 elif cur[2] == '.':  # если нет FR1
-                    start_ = int(cur[7][0]) - int(cur[10]) - 1  # где начинается FR2
-                    cur_seq = seq[2:start_] + '--' + seq[
-                                                     start_:]  # последовательность для перевода в аминокислоты с одним GAP
+                    start_ = int(cur[7][0]) - int(cur[10]) - 1  # начинало FR2
+                    cur_seq = seq[2:start_] + '--' + seq[start_:]
 
                     cur_aa = tr(cur_seq)  # перевод в аминокислоты
 
                     name = 'V' + cur[5][1]  # определение VH/VL/VH
 
-                    file_in_fr = map_fr[name + "_FR1.fasta"]  # все последовательности FR1
+                    file_in_fr = map_fr[name + "_FR1.fasta"]
 
-                    fl = '0'  # '0' - еще не найден FR4, что-то другое - имя найденного FR1
+                    fl = '0'  # '0' - нет FR4, иначе - имя найденного FR1
 
                     for fr in file_in_fr:  # пробегаем по FR1
-                        tmp = sga(cur_aa, fr.seq)  # выравнивание FR1 на последовательность
+                        tmp = sga(cur_aa, fr.seq)  # выравнивание
                         scor = tmp[0]
                         if scor > 0.75:  # выравнивание хорошее
-                            for_wr = str_.split(
-                                ',')  # нужно заменить поля str_: вставить имя FR4, заменить последовательность на новую и убрать флаг на сдвиг и переворот последовательности
+                            for_wr = str_.split(',')
                             for_wr[1] = str(cur_seq)
                             for_wr[11] = '0'
                             for_wr[10] = '0'
@@ -258,15 +265,15 @@ def main():
                             break
 
                     if fl == '0':  # так и не нашли FR1 с одним GAP
-                        cur_seq = seq[1:start_] + '-' + seq[start_:]  # последовательность для перевода в аминокислоты с двумя GAP
+                        cur_seq = seq[1:start_] + '-' + seq[start_:]
 
                         cur_aa = tr(cur_seq)  # перевод в аминокислоты
 
                         for fr in file_in_fr:  # пробегаем по FR1
-                            tmp = sga(cur_aa, fr.seq)  # выравнивание FR1 на последовательность
+                            tmp = sga(cur_aa, fr.seq)  # выравнивание
                             scor = tmp[0]
                             if scor > 0.75:  # выравнивание хорошее
-                                for_wr = str_.split(',')  # нужно заменить поля str_: вставить имя FR4, заменить последовательность на новую и убрать флаг на сдвиг и переворот последовательности
+                                for_wr = str_.split(',')
                                 for_wr[1] = str(cur_seq)
                                 for_wr[11] = '0'
                                 for_wr[10] = '0'
