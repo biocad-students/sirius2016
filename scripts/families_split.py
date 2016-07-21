@@ -50,3 +50,6 @@ def main():
             file_out = open(os.path.join(tmp.out_dir, file_name),'a')
             file_out.write(record)
             file_out.close()
+
+if __name__ == "__main__":
+    main()
