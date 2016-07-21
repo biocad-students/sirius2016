@@ -72,7 +72,7 @@ def sga(s1, s2, s3, s4):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dir', help='directory')
-    parser.add_argument('--num', help='output file')
+    parser.add_argument('--num', help='file number')
     return parser.parse_args()
 
 
