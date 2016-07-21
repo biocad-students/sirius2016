@@ -13,9 +13,10 @@ def parse_args():
 tmp = parse_args()
 in_directory = tmp.in_dir
 out_directory = tmp.out_dir
-
-for file in listdir(in_directory):
-    outfile = open(os.path.join(out_directory,file),"w")
+files = listdir(in_directory)
+files = filter(lambda x: x.endswith('.fastq'), files)
+for file in  files:
+    outfile = open(os.path.join(out_directory,file[0:file.rfind(".")]+".fasta"),"w")
     arr = []
     for record in SeqIO.parse(os.path.join(in_directory,file), format="fastq"):
         arr.append(record)
