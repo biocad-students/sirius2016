@@ -91,6 +91,7 @@ map = {
 
 # перевод нуклеотидов в аминокислоты
 def tr(cur_seq):
+    ans = ""
     if len(cur_seq) % 3 == 1:
         cur_seq = cur_seq[:-1]
     if len(cur_seq) % 3 == 2:
